@@ -1,2 +1,2 @@
 # ImageToText
-A mini project for to practice building an interface where users can upload an image (e.g., a photo of a document), and the app will use OCR to extract text from the image, displaying it in a text area or downloadable document.
+The objective of this project is to build a web application that allows users to input text or upload a text file and convert it into audio. The app will read the text aloud using a synthesized voice, allowing users to listen to the content directly on the page. This project will involve working with the Web Speech API or a third-party text-to-speech (TTS) API to process and play the audio, and it can also include additional features like adjusting the voice speed or selecting different voices.
