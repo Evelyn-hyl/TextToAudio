@@ -16,6 +16,15 @@
   src: url(../src/assets/Montserrat-Regular.woff2) format('woff2');
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -69,7 +78,7 @@ html, body {
 
 .description-player-wrapper {
   margin: 50px 0px 0px 0px;
-  padding: 40px;
+  padding: 40px 40px 300px 40px;
   width: 25%;
 }
 
@@ -115,7 +124,6 @@ html, body {
 .divider {
   position: relative;
   padding-top: 20px;
-  padding-bottom: 30px;
 }
 
 .divider::after {
@@ -123,7 +131,7 @@ html, body {
   position: absolute;
   top: 50%;
   left: 0;
-  width: 280px;
+  width: 100%;
   height: 0.5px;
   background-color: #ddbea9;
 }
@@ -144,9 +152,20 @@ html, body {
   cursor: pointer;
 }
 
+.generate-button {
+  position: absolute;
+  top: 30px;
+  transition: background-color 0.3s ease, top 1.5s;
+  margin: 30px 0px 0px 10px;
+}
+
 .generate-button:hover {
   background-color: #c58c6d;
-  box-shadow: 0 4px 8px rgba(108, 67, 52, 0.25);
+  border:1px solid #fff6eb;
+}
+
+.generate-button.move {
+  top: 150px;
 }
 
 .options-wrapper {
@@ -165,6 +184,7 @@ html, body {
   color:#c58c6d;
   box-shadow: 0 4px 8px rgba(108, 67, 52, 0.25);
   border: 1px solid #fff6eb;
+  transition: color 0.3s ease;
 }
 
 .upload-tab {
@@ -176,6 +196,7 @@ html, body {
   color:#6b705c;
   box-shadow: 0 4px 8px rgba(108, 67, 52, 0.25);
   border: 1px solid #fff6eb;
+  transition: color 0.3s ease;
 }
 
 .text-box {
@@ -187,7 +208,7 @@ html, body {
   padding: 50px;
   background-color: #f1e3d3;
   letter-spacing: 0.6px;
-  width: 700px;
+  width: 80%;
   height: 60%;
   margin-top: -10px;
 }
@@ -204,20 +225,128 @@ html, body {
   color: transparent;
 }
 
-.paste-text {
+.paste-box {
   border: 3px solid #6b705c;
   z-index: 2;
   color: #6b705c;
   line-height: 1.8;
 }
 
-.upload-text {
+.upload-box {
   border: 3px solid #c58c6d;
   z-index: 1;
   color: #fff6eb;
   background-color: #ddbea9;
 }
 
+.upload-box::file-selector-button {
+  background-color: #fff6eb;
+  color:#c58c6d;
+  border: solid #fff6eb;
+  border-radius: 5px;
+  font-family: 'Monsterrat', Helvetica;
+}
+
 .active {
   z-index: 3;
+}
+
+.audio-player-wrapper {
+  position: relative;
+  height: 150px;
+  width: 100%;
+  padding: 30px 0px;
+}
+
+.custom-audio-player {
+  position: absolute;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  justify-content: center;
+  align-items: center;
+  height: 60%;
+  width: 100%;
+  gap: 10px;
+  background-color: #fff6eb;
+  border: 2px solid #6b705c;
+  border-radius: 20px;
+  transition: visibility 0s, linear 1s;
+}
+
+.play-button {
+  width: 30px;
+  height: 30px;
+  background-color: #6b705c;
+  border:#6b705c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.play-button:hover {
+  background-color: #c58c6d;
+  cursor: pointer;
+}
+
+/* Play icon triangle */
+.play-button::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 11px; /* Creates triangle shape */
+  border-color: transparent transparent transparent #fff6eb; /* White play icon */
+  transform: translateX(1px); /* Slight adjustment to center the triangle */
+  transition: all 0.3s ease;
+}
+
+.play-button.playing::before {
+  content: '';
+  width: 4px;
+  height: 12px;
+  background-color: #fff6eb;
+  border: none;
+  border-radius: 1px;
+  transform: translateX(-4px);
+}
+
+.play-button.playing::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 12px;
+  background-color: #fff6eb;
+  border: none;
+  border-radius: 1px;
+  transform: translate(4px, 0px);
+}
+
+#seekBar {
+  width: 50%;
+  accent-color: #c58c6d;
+  color:#fff6eb;
+  height: 8px; /* Height of the track */
+  -webkit-appearance: none; /* Remove default styles on WebKit browsers */
+  background-color: #f1e3d3; /* Color of the track */
+  border-radius: 5px; /* Rounded corners */
+  outline: none;
+}
+
+#currentTime {
+  color: #6b705c; /* Set to your desired color */
+  font-size: 11px;
+  font-weight: bold;
+  font-family: 'Monsterrat', Helvetica;
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+  animation: fadeIn 1s ease-in forwards;
 }

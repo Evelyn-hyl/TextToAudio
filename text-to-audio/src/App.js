@@ -1,52 +1,16 @@
 import { useState } from 'react';
 import logo from './assets/TextToAudioLogo.svg'
-
-
-/**
- * A text box component with two tabs:
- * 1/ "Paste" tab displays box that allows users to paste or enter text.
- * 2/ "Upload" tab displays box that allows users to upload text.
- * @returns {JSX.Element} The text box component
- */
-function TextBox() {
-  const [isPasteActive, setIsPasteActive] = useState(true);
-  const [isUploadActive, setIsUploadActive] = useState(false);
-
-  const handlePasteTabClick = () => {
-    console.log("Toggled tab: Paste Tab");
-
-    if (!isPasteActive) {
-      setIsPasteActive(true);
-      setIsUploadActive(false);
-    }
-  };
-
-  const handleUploadTabClick = () => {
-    console.log("Toggled tab: Upload Tab");
-
-    if (!isUploadActive) {
-      setIsPasteActive(false);
-      setIsUploadActive(true);
-    }
-  };
-
-  return (
-    <div className='text-block-wrapper'>
-      <div className='options-wrapper'>
-        <button className='button paste-tab' onClick={handlePasteTabClick}>PASTE</button>
-        <button className='button upload-tab' onClick={handleUploadTabClick}>UPLOAD</button>
-      </div>
-      <textarea className={`text-box paste-text ${isPasteActive ? 'active' : ''}`} placeholder='Enter or paste text...'></textarea>
-      <input type='file' className={`text-box upload-text ${isUploadActive ? 'active' : ''}`}></input>
-    </div>
-  );
-}
+import { TextBox } from './components/TextBox';
+import { AudioPlayer } from './components/AudioPlayer';
+// import { generateAudio } from './api/api.js';
 
 
 export default function Main() {
-    function handleGenerateClick() {
-    alert('Generate something');
-  }
+  const [text, setText] = useState('');
+
+  // const handleGenerateAudio = async () => {
+  //   const audioUrl = await generateAudio(text);
+  // }
 
   return (
     <>
@@ -66,11 +30,10 @@ export default function Main() {
             click the "generate" button and patiently wait for our storyteller.
           </p>
           <div className='divider'></div>
-          <button className='button generate-button' onClick={handleGenerateClick}>GENERATE</button>
+          <AudioPlayer text={text}/>
         </div>
-        <TextBox />
+        <TextBox text={text} setText={setText} />
       </div>
     </>
   );
 }
-
