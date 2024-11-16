@@ -1,10 +1,25 @@
+/**
+ * @file AudioPlayer.js
+ * @description A React component for rendering a customizable audio player.
+ *              Features include play/pause functionality, a dynamic seek bar,
+ *              and real-time duration and current time display.
+ *              Includes helper functions:
+ *              - getAudio(): Fetches audio data for playback.
+ *              - formatMinSecs(): Converts seconds into MM:SS format.
+ * @module AudioPlayer
+ * @version 1.0.0
+ * 
+ * @requires react
+ * @requires react-dom
+ * @exports AudioPlayer
+ */
+
 import { useState, useRef } from 'react';
 
 /**
- * a function that generates an audio from text
- * fetches audio from server
+ * Fetches audio data for playback.
  * @param {string} text 
- * @returns an audio url reading the inputted text
+ * @returns An audio url reading the inputted text
  */
 async function getAudio(text) {
     const url = "http://localhost:5000/api/generate-audio";
@@ -39,9 +54,9 @@ async function getAudio(text) {
 }
 
 /**
- * 
+ * Converts seconds into MM:SS format for display.
  * @param {float} secs 
- * @returns the input seconds formatted in MM:SS
+ * @returns {string} The input seconds formatted in MM:SS
  */
 function formatMinSecs(secs) {
     const mins = secs / 60;
@@ -53,7 +68,7 @@ function formatMinSecs(secs) {
 /**
  * 
  * @param {props} text
- * @returns an audio player
+ * @returns An audio player
  */
 export function AudioPlayer({ text }) {
     const [isGenerateClick, setIsGenerateClick] = useState(false);
