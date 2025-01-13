@@ -17,7 +17,7 @@ export default function Main() {
       <nav className="top-bar">
         <div className='logo-wrapper'>
           <a>
-            <img src={logo} id='logo-img' ></img>
+            <img src={logo} id='logo-img' alt='Text to Audio'></img>
             <span className='logo-text'>TEXT TO AUDIO</span>
           </a>
         </div>

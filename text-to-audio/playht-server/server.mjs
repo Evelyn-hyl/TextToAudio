@@ -48,9 +48,9 @@ app.post("/api/generate-audio", async (req, res) => {
         return res.status(400).json({ error: "Invalid or missing 'text' parameter" });
       }
 
-      const generatedAudio = await PlayHT.generate(text);
+      const generated = await PlayHT.generate(text);
 
-      const { audioUrl } = generatedAudio;
+      const { audioUrl } = generated;
       console.log('Audio file url: ', audioUrl);
 
       res.status(201).json({ audioUrl });

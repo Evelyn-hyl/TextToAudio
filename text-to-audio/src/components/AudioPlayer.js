@@ -5,7 +5,7 @@
  *              and real-time duration and current time display.
  *              Includes helper functions:
  *              - getAudio(): Fetches audio data for playback.
- *              - formatMinSecs(): Converts seconds into MM:SS format.
+ *              - formatMinSec(): Converts seconds into MM:SS format.
  * @module AudioPlayer
  * @version 1.0.0
  * 
@@ -14,7 +14,9 @@
  * @exports AudioPlayer
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import ScaleLoader from "react-spinners/ScaleLoader";
+// import Alert from './Alert';
 
 /**
  * Fetches audio data for playback.
@@ -58,7 +60,7 @@ async function getAudio(text) {
  * @param {float} secs 
  * @returns {string} The input seconds formatted in MM:SS
  */
-function formatMinSecs(secs) {
+function formatMinSec(secs) {
     const mins = secs / 60;
     const remSecs = secs % 60;
 
@@ -71,15 +73,41 @@ function formatMinSecs(secs) {
  * @returns An audio player
  */
 export function AudioPlayer({ text }) {
-    const [isGenerateClick, setIsGenerateClick] = useState(false);
-    const [isPlayClick, setIsPlayClick] = useState(false);
+    const [isGenerateClicked, setIsGenerateClicked] = useState(false);
+    const [isPlayClicked, setIsPlayClicked] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [audioUrl, setAudioUrl] = useState('');
     const [audioDuration, setAudioDuration] = useState(null);
+    const [progress, setProgress] = useState(0);
     const audioRef = useRef();
-    const minSecs = formatMinSecs(audioDuration);
+    const previousTextRef = useRef('');
     
+    useEffect(() => {
+        const audio = audioRef.current;
+
+        const updateProgress = () => {
+            if (audio && audio.duration) {
+                const currentProgress = (audio.currentTime / audio.duration) * 100;
+                setProgress(currentProgress);
+            }
+        }
+
+        audio.addEventListener("timeupdate", updateProgress);
+
+        return () => {
+            audio.removeEventListener("timeupdate", updateProgress);
+        };
+    }, []);
+
     const handleGenerateClick = async () => {
+        if (text === previousTextRef.current) {
+            alert("The audio has been generated for this text.");
+            return;
+        }
+
         console.log("Text from TextBox: ", text);
+        setIsGenerateClicked(false);
+        setIsLoading(true);
 
         try {
             const url = await getAudio(text);
@@ -90,22 +118,28 @@ export function AudioPlayer({ text }) {
             return;
         }
 
-        setIsGenerateClick(false);
+        setIsGenerateClicked(false);
+        setIsLoading(false);
+        
         setTimeout(() => {
-            setIsGenerateClick(true);
+            setIsGenerateClicked(true);
+            setProgress(0);
         }, 10);
+
+        console.log("Audio duration:", audioRef.current.duration);
+        setAudioDuration(audioRef.current.duration);
+
+        previousTextRef.current = text;
     };
 
     const handlePlayClick = () => {
         if (audioRef.current) {
-            console.log("Audio duration:", audioRef.current.duration);
-            setAudioDuration(audioRef.current.duration);
-
+            /** Controls the play button UI */
             if (audioRef.current.paused) {
                 audioRef.current.play()
                     .then(() => {
                         console.log('Audio is playing');
-                        setIsPlayClick(true);
+                        setIsPlayClicked(true);
                     })
                     .catch((error) => {
                         console.error('Error during play:', error);
@@ -113,25 +147,43 @@ export function AudioPlayer({ text }) {
             } else {
                 audioRef.current.pause();
                 console.log('Audio is paused');
-                setIsPlayClick(false);
+                setIsPlayClicked(false);
             }
         }
 
-        if (isPlayClick == false) {
-            setIsPlayClick(true);
-        } else {
-            setIsPlayClick(false);
-        }
+        /** Sets the play button to "paused" form when finished playback */
+        audioRef.current.onended = () => {
+            console.log("Playback finished.");
+            setIsPlayClicked(false);
+        };
     }
-  
+
+    /** Syncs the progress time with user-selected time */
+    const handleSeek = (e) => {
+        const audio = audioRef.current;
+        const newTime = (e.target.value / 100) * audioDuration;
+        audio.currentTime = newTime;
+        setProgress(e.target.value);
+    }
+      
     return (
         <div className="audio-player-wrapper">
-          <div className={`custom-audio-player ${isGenerateClick ? 'show' : ''}`}>
-            <button className={`play-button ${isPlayClick ? 'playing' : ''}`} onClick={handlePlayClick}></button>
-            <input type="range" id="seekBar" min="0" max="100" defaultValue="0"></input>
-            <span id="currentTime">{minSecs}</span>
+          <div className={`custom-audio-player ${isGenerateClicked ? 'show' : ''}`}>
+            <button className={`play-button ${isPlayClicked ? 'playing' : ''}`} onClick={handlePlayClick}></button>
+            <input type="range" id="seekBar" min="0" max="100" value={progress} onChange={handleSeek} style={{'--progress': `${progress}%`,}}></input>
+            <span id="currentTime">{formatMinSec(audioRef.current?.currentTime || 0)}</span>
           </div>
-          <button className={`button generate-button ${isGenerateClick ? 'move' : ''}`} onClick={handleGenerateClick}>GENERATE</button>
+          {/* <p className={`alert ${}`}> * The audio has been generated for this text * </p> */}
+          <button className={`button generate-button ${isGenerateClicked ? 'move' : ''}`} onClick={handleGenerateClick} disabled={isLoading}
+          >
+            {isLoading? (
+                <>
+                    <ScaleLoader 
+                    height={15}
+                    color={"#fff6eb"}
+                    />
+                </>
+            ) : ("GENERATE")}</button>
           <audio ref={audioRef} src={audioUrl}></audio>
         </div>
     );

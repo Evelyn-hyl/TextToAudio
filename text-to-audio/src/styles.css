@@ -288,6 +288,10 @@ html, body {
   transition: background-color 0.3s ease;
 }
 
+.play-button:focus {
+  outline: 1px #6b705c;
+}
+
 .play-button:hover {
   background-color: #c58c6d;
   cursor: pointer;
@@ -333,9 +337,10 @@ html, body {
   color:#fff6eb;
   height: 8px; /* Height of the track */
   -webkit-appearance: none; /* Remove default styles on WebKit browsers */
-  background-color: #f1e3d3; /* Color of the track */
+  background: linear-gradient(to right, #c58c6d 0%, #c58c6d var(--progress), #ebe1d8 var(--progress), #ebe1d8 100%);
   border-radius: 5px; /* Rounded corners */
   outline: none;
+  cursor: pointer;
 }
 
 #currentTime {
@@ -349,4 +354,17 @@ html, body {
   opacity: 1;
   visibility: visible;
   animation: fadeIn 1s ease-in forwards;
+}
+
+.alert {
+  background-color:#c5776d;
+  color:#fff6eb;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+
+.alert.show {
+  visibility: visible;
 }
