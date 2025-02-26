@@ -8,10 +8,6 @@ import { AudioPlayer } from './components/AudioPlayer';
 export default function Main() {
   const [text, setText] = useState('');
 
-  // const handleGenerateAudio = async () => {
-  //   const audioUrl = await generateAudio(text);
-  // }
-
   return (
     <>
       <nav className="top-bar">
